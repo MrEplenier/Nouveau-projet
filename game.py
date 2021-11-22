@@ -1,46 +1,44 @@
-import streamlit as st
 import numpy as np
 import gym
 from matplotlib import pyplot as plt
 import time
 
-st.write("ça marche")
+def random_games():
 
-env = gym.make("BipedalWalker-v3")
+    env = gym.make("BipedalWalker-v3")
 
-# Each of this episode is its own game.
-action_size = env.action_space.shape[0]
+    # Each of this episode is its own game.
+    action_size = env.action_space.shape[0]
 
-for episode in range(5):
+    for episode in range(5):
 
-    st.write("Episode", episode + 1, "/ 5")
+        env.reset()
 
-    env.reset()
+        timer_init = time.time()
+        # this is each frame, up to 500...but we wont make it that far with random.
+        while True:
+            # This will display the environment
+            # Only display if you really want to see it.
+            # Takes much longer to display it.
+            env.render()
 
-    timer_init = time.time()
-    # this is each frame, up to 500...but we wont make it that far with random.
-    while True:
-        # This will display the environment
-        # Only display if you really want to see it.
-        # Takes much longer to display it.
-        env.render()
+            # This will just create a sample action in any environment.
+            # In this environment, the action can be any of one how in list on 4, for example [0 1 0 0]
+            action = np.random.uniform(-1.0, 1.0, size = action_size)
 
-        # This will just create a sample action in any environment.
-        # In this environment, the action can be any of one how in list on 4, for example [0 1 0 0]
-        action = np.random.uniform(-1.0, 1.0, size = action_size)
+            timer = time.time() - timer_init
 
-        timer = time.time() - timer_init
+            # this executes the environment with an action,
+            # and returns the observation of the environment,
+            # the reward, if the env is over, and other info.
+            next_state, reward, done, info = env.step(action)
 
-        # this executes the environment with an action,
-        # and returns the observation of the environment,
-        # the reward, if the env is over, and other info.
-        next_state, reward, done, info = env.step(action)
+            #print("{:.2f}".format(timer))
+            # lets print everything in one line:
+            #print(reward, action)
+            if done or timer > 5:
+                break
 
-        #print("{:.2f}".format(timer))
-        # lets print everything in one line:
-        #print(reward, action)
-        if done or timer > 5:
-            break
+    env.close()
 
-env.close()
-st.stop()
+random_games()
